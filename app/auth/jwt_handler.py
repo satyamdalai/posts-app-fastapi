@@ -5,20 +5,21 @@ from decouple import config
 
 JWT_SECRET = config("secret")
 JWT_ALGORITHM = config("algorithm")
+JWT_EXPIRY = int(config("aceess_token_expiry"))
 
 
 def token_response(token: str):
     return {
         "access_token": token,
         "token_type": "Bearer",
-        "expires_in": 600,
+        "expires_in": JWT_EXPIRY,
     }
 
 
 def signJWT(email: str):
     payload = {
         "email": email,
-        "expiry": time.time() + 600
+        "expiry": time.time() + JWT_EXPIRY
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return token_response(token)
